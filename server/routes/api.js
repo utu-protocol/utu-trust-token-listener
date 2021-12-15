@@ -4,7 +4,8 @@ import {
   balance,
   blockNumber,
   eventQuery,
-  getTransfers
+  getEndorsements,
+  getEndorsementsActive
 } from '../utils/ethereum';
 var router = express.Router();
 
@@ -16,8 +17,13 @@ router.get('/', async (req, res) => {
 /* GET all endorsements for address. */
 router.get('/endorsements/:address', async (req, res) => {
   if (!req.params.address) return;
-  res.send(await getTransfers(req.params.address));
+  res.send(await getEndorsements(req.params.address));
 });
+
+router.get('/endorsements/active/:address', async (req, res) => {
+  if (!req.params.address) return;
+  res.send(await getEndorsementsActive(req.params.address));
+})
 
 /* GET current block number. */
 router.get('/block', async (req, res) => {
