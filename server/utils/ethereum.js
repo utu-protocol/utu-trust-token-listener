@@ -4,7 +4,6 @@ import {
   ETHERSCAN_API_KEY,
   ETHERSCAN_HOST,
   INFURA_WEBSOCKET,
-  PAYMENT_ADDRESS,
 } from '../config';
 const client = require('node-rest-client-promise').Client();
 
@@ -37,8 +36,8 @@ export const blockNumber = async () => {
 
 export const eventQuery = async (
   eventName = 'Endorse',
-  startBlock = 11021335,
-  endBlock = 11021338,
+  startBlock = 13809274,
+  endBlock = 13819274,
 ) => {
   return await contract.queryFilter(eventName, startBlock, endBlock);
 };
@@ -49,11 +48,16 @@ export const blockTimestamp = async (blockNumber) => {
   return creationTime;
 };
 
-export const getTransfers = async (address, blocks = -1000) => {
+export const getEndorsements = async (address, blocks = -1000) => {
   await init();
   const endorsesFilter = await contract.filters.Endorse(
     address,
   );
   const endorses = await contract.queryFilter(endorsesFilter, blocks);
   return endorses;
+};
+
+export const getEndorsementsActive = async (address, blocks = -1000) => {
+  await init();
+  return await eventQuery('Endorse', 13809274, 13812274)
 };
