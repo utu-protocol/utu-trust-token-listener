@@ -15,8 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 /* GET all endorsements for address. */
-router.get('/endorsements/:address', async (req, res) => {
-  if (!req.params.address) return;
+router.get('/endorsements/:address?', async (req, res) => {
   res.send(await getEndorsements(req.params.address));
 });
 
