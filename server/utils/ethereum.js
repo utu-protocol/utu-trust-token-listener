@@ -1,6 +1,8 @@
+import { promises as fsp }  from "fs";
 import { ethers } from 'ethers';
 import {
   CONTRACT_ADDRESS,
+  ABI_FILE,
   ETHERSCAN_API_KEY,
   ETHERSCAN_HOST,
   INFURA_WEBSOCKET,
@@ -19,8 +21,11 @@ export const init = async () => {
 };
 
 export const getContractAbi = async () => {
-  const etherscanResponse = await client.getPromise(etherscanUrl);
-  const CONTRACT_ABI = JSON.parse(etherscanResponse.data.result);
+  const input = ABI_FILE
+    ? await fsp.readFile(ABI_FILE)
+    : (await client.getPromise(etherscanUrl)).data.result;
+
+  const CONTRACT_ABI = JSON.parse(input);
   return CONTRACT_ABI;
 };
 
