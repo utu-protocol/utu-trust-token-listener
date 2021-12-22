@@ -14,7 +14,7 @@ paths:
       description: "Fetches endorsements for all target addresses. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
       parameters:
         - in: query
-          name: from-block
+          name: from_block
           description: "Minimal block number for which to get endorsements. Defaults to the number of the block in 
           which the UTT contract was deployed."
           schema:
@@ -39,13 +39,13 @@ paths:
       description: "Fetches endorsements for the given target address, a hex string. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
       parameters:
         - in: path
-          name: target-address
+          name: target_address
           required: true
           description: "Target address of returned endorsements, i.e. the endorsed address."
           schema:
             $ref: "#/components/schemas/EthereumAddress"
         - in: query
-          name: from-block
+          name: from_block
           description: "Minimal block number for which to get endorsements. Defaults to the number of the block in 
           which the UTT contract was deployed."
           schema:
