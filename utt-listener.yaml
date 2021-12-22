@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  title: UTU Trust Token Listener
+  description: Services to easily fetch endorsements from the chain
+  version: 1.0.0
+servers:
+  - description: "production"
+    url: 'https'
+paths:
+  /endorsements:
+    get:
+      summary: "Fetches all endorsements."
+      operationId: getEndorsements
+      description: "Fetches endorsements for all target addresses. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
+      parameters:
+        - in: query
+          name: from-block
+          description: "Minimal block number for which to get endorsements. Defaults to the number of the block in 
+          which the UTT contract was deployed."
+          schema:
+            $ref: "#/components/schemas/BlockNumber"
+      responses:
+        "200":
+          description: "Endorsements for the given target address."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EndorsementsSuccessResponse"
+        default:
+          description: "Any error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /endorsements/{target-address}:
+    get:
+      summary: "Fetches endorsements for the given target address."
+      operationId: getEndorsementsForAddress
+      description: "Fetches endorsements for the given target address, a hex string. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
+      parameters:
+        - in: path
+          name: target-address
+          required: true
+          description: "Target address of returned endorsements, i.e. the endorsed address."
+          schema:
+            $ref: "#/components/schemas/EthereumAddress"
+        - in: query
+          name: from-block
+          description: "Minimal block number for which to get endorsements. Defaults to the number of the block in 
+          which the UTT contract was deployed."
+          schema:
+            $ref: "#/components/schemas/BlockNumber"
+      responses:
+        "200":
+          description: "Endorsements for the given target address."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EndorsementsSuccessResponse"
+        default:
+          description: "Any error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    EthereumAddress:
+      description: "An Ethereum address hex string."
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+    BlockNumber:
+      description: "A block number"
+      type: integer
+      minimum: 0
+    Block:
+      description: "Metadata about a block."
+      type: object
+      required:
+        - number
+        - timestamp
+      properties:
+        number:
+          description: "Block number."
+          allOf: [ { $ref: "#/components/schemas/BlockNumber" } ]
+        timestamp:
+          description: "Block timestamp (unix epoch)."
+          type: integer
+    ErrorResponse:
+      description: "Generic service error response."
+      type: object
+      required:
+        - errorCode
+        - errorMessage
+      properties:
+        errorCode:
+          description: "API-specific error code identifying what went wrong in more detail than the http error code."
+          type: number
+          example: 9999
+        errorMessage:
+          description: "The error message."
+          type: string
+    EndorsementsSuccessResponse:
+      description: "Endorsements service response."
+      type: object
+      required:
+        - fromBlock
+        - toBlock
+        - endorsements
+      properties:
+        fromBlock:
+          description: "Earliest block for which endorsements were returned."
+          allOf: [{ $ref: "#/components/schemas/Block" }]
+        toBlock:
+          description: "Latest block for which endorsements were returned."
+          allOf: [{ $ref: "#/components/schemas/Block" }]
+        endorsements:
+          type: array
+          items:
+            $ref: "#/components/schemas/Endorsement"
+    Endorsement:
+      description: "A single endorsement."
+      type: object
+      required:
+        - source
+        - target
+      properties:
+        source:
+          description: "The address of the endorsing entity (endorser)."
+          allOf: [{ $ref: "#/components/schemas/EthereumAddress" }]
+        target:
+          description: "The address of the endorsed entity (endorsee)."
+          allOf: [{ $ref: "#/components/schemas/EthereumAddress" }]
+        value:
+          description: "Number of UTT that were staked on the endorsement."
+          type: number
+        block:
+          description: "Block in which this endorsements was mined."
+          allOf: [{ $ref: "#/components/schemas/Block" }]
+
+
