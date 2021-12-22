@@ -14,11 +14,10 @@ const etherscanUrl = `http://${ETHERSCAN_HOST}/api?module=contract&action=getabi
 const provider = new ethers.providers.WebSocketProvider(INFURA_WEBSOCKET);
 
 const UTT_MINED_AT_BLOCK = 0;
-let contract;
 
-export const init = async () => {
+export const getContract = async () => {
   const CONTRACT_ABI = await getContractAbi();
-  contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+  return new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
 };
 
 export const getContractAbi = async () => {
@@ -31,7 +30,7 @@ export const getContractAbi = async () => {
 };
 
 export const balance = async (address) => {
-  await init();
+  const contract = await getContract();
   const balance = await contract.balanceOf(address);
   return ethers.utils.formatEther(balance);
 };
@@ -63,6 +62,6 @@ export const getEndorsements = async (address, fromBlock = UTT_MINED_AT_BLOCK) =
 };
 
 export const getEndorsementsActive = async (address, blocks = -1000) => {
-  await init();
-  return await eventQuery('Endorse', 13809274, 13812274)
+  const contract = await getContract();
+  return await eventQuery('Endorse', UTT_MINED_AT_BLOCK)
 };
