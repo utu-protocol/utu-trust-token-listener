@@ -7,6 +7,31 @@ servers:
   - description: "production"
     url: 'https'
 paths:
+  /balance/{address}:
+    get:
+      summary: "Fetches the UTT balance for the given address."
+      operationId: getBalanceForAddress
+      parameters:
+        - in: path
+          name: address
+          required: true
+          description: "Address for which to get the balance."
+          schema:
+            $ref: "#/components/schemas/EthereumAddress"
+      responses:
+        "200":
+          description: "UTT Balance for the given target address."
+          content:
+            application/json:
+              schema:
+                type: number
+
+        default:
+          description: "Any error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /endorsements:
     get:
       summary: "Fetches all endorsements."
