@@ -1,12 +1,7 @@
 import 'babel-polyfill';
 import express from 'express';
-import {
-  balance,
-  blockNumber,
-  eventQuery,
-  getEndorsements,
-  getEndorsementsActive
-} from '../utils/ethereum';
+import { balance, getEndorsements } from '../utils/ethereum';
+import { endorsementsResponse } from '../service/response';
 var router = express.Router();
 
 /* GET home. */
@@ -16,7 +11,7 @@ router.get('/', async (req, res) => {
 
 /* GET all endorsements for address. */
 router.get('/endorsements/:target_address?', async (req, res) => {
-  res.send(await getEndorsements(req.params.target_address, req.query.from_block));
+  res.send(endorsementsResponse(await getEndorsements(req.params.target_address, parseInt(req.query.from_block))));
 });
 
 export default router;
