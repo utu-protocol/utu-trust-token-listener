@@ -15,6 +15,23 @@ const provider = new ethers.providers.WebSocketProvider(INFURA_WEBSOCKET);
 
 const UTT_MINED_AT_BLOCK = 0;
 
+// exported functions
+
+export async function balance(address) {
+  const contract = await getContract();
+  const balance = await contract.balanceOf(address);
+  return ethers.utils.formatEther(balance);
+}
+
+export async function getEndorsements(targetAddress, fromBlock = UTT_MINED_AT_BLOCK) {
+  const contract = await getContract();
+  const endorsesFilter = await contract.filters.Endorse(null, targetAddress);
+  return await contract.queryFilter(endorsesFilter, fromBlock);
+}
+
+
+// private helper functions
+
 async function getContract() {
   const CONTRACT_ABI = await getContractAbi();
   return new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
@@ -28,12 +45,6 @@ async function getContractAbi() {
   return JSON.parse(input);
 }
 
-export async function balance(address) {
-  const contract = await getContract();
-  const balance = await contract.balanceOf(address);
-  return ethers.utils.formatEther(balance);
-}
-
 async function blockNumber() {
   return await provider.getBlockNumber();
 }
@@ -43,9 +54,4 @@ async function blockTimestamp(blockNumber) {
   return block.timestamp;
 }
 
-export async function getEndorsements(targetAddress, fromBlock = UTT_MINED_AT_BLOCK) {
-  const contract = await getContract();
-  const endorsesFilter = await contract.filters.Endorse(null, targetAddress);
-  return await contract.queryFilter(endorsesFilter, fromBlock);
-}
 
