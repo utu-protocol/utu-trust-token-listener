@@ -50,11 +50,9 @@ export const blockTimestamp = async (blockNumber) => {
   return block.timestamp;
 };
 
-export const getEndorsements = async (address, fromBlock = UTT_MINED_AT_BLOCK) => {
+export const getEndorsements = async (targetAddress, fromBlock = UTT_MINED_AT_BLOCK) => {
   const contract = await getContract();
-  const endorsesFilter = await contract.filters.Endorse(
-    address,
-  );
+  const endorsesFilter = await contract.filters.Endorse(null, targetAddress);
   return await contract.queryFilter(endorsesFilter, fromBlock);
 };
 

@@ -15,8 +15,8 @@ router.get('/', async (req, res) => {
 });
 
 /* GET all endorsements for address. */
-router.get('/endorsements/:address?', async (req, res) => {
-  res.send(await getEndorsements(req.params.address));
+router.get('/endorsements/:target_address?', async (req, res) => {
+  res.send(await getEndorsements(req.params.target_address, req.query.from_block));
 });
 
 export default router;
