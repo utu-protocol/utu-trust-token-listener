@@ -24,11 +24,15 @@ export async function balance(address) {
 }
 
 export async function getEndorsements(targetAddress, fromBlock = UTT_MIN_BLOCK) {
+  const toBlock = await provider.getBlockNumber();
   const contract = await getContract();
   const endorsesFilter = await contract.filters.Endorse(null, targetAddress);
-  return await contract.queryFilter(endorsesFilter, fromBlock);
+  return {
+    fromBlock: fromBlock,
+    toBlock: toBlock,
+    endorsementEvents: await contract.queryFilter(endorsesFilter, fromBlock, toBlock)
+  };
 }
-
 
 // private helper functions
 
@@ -43,10 +47,6 @@ async function getContractAbi() {
     : (await client.getPromise(etherscanUrl)).data.result;
 
   return JSON.parse(input);
-}
-
-async function blockNumber() {
-  return await provider.getBlockNumber();
 }
 
 async function blockTimestamp(blockNumber) {
