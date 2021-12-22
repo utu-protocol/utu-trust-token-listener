@@ -58,7 +58,3 @@ export const getEndorsements = async (address, fromBlock = UTT_MINED_AT_BLOCK) =
   return await contract.queryFilter(endorsesFilter, fromBlock);
 };
 
-export const getEndorsementsActive = async (address, blocks = -1000) => {
-  const contract = await getContract();
-  return await eventQuery('Endorse', UTT_MINED_AT_BLOCK)
-};
