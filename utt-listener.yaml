@@ -78,7 +78,6 @@ components:
       type: object
       required:
         - number
-        - timestamp
       properties:
         number:
           description: "Block number."
