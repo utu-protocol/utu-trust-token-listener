@@ -25,8 +25,7 @@ export const getContractAbi = async () => {
     ? await fsp.readFile(ABI_FILE)
     : (await client.getPromise(etherscanUrl)).data.result;
 
-  const CONTRACT_ABI = JSON.parse(input);
-  return CONTRACT_ABI;
+  return JSON.parse(input);
 };
 
 export const balance = async (address) => {
@@ -48,8 +47,7 @@ export const eventQuery = async (
 
 export const blockTimestamp = async (blockNumber) => {
   const block = await provider.getBlock(blockNumber); // block is null; the regular provider apparently doesn't know about this block yet.
-  const creationTime = block.timestamp;
-  return creationTime;
+  return block.timestamp;
 };
 
 export const getEndorsements = async (address, fromBlock = UTT_MINED_AT_BLOCK) => {
@@ -57,8 +55,7 @@ export const getEndorsements = async (address, fromBlock = UTT_MINED_AT_BLOCK) =
   const endorsesFilter = await contract.filters.Endorse(
     address,
   );
-  const endorses = await contract.queryFilter(endorsesFilter, fromBlock);
-  return endorses;
+  return await contract.queryFilter(endorsesFilter, fromBlock);
 };
 
 export const getEndorsementsActive = async (address, blocks = -1000) => {
