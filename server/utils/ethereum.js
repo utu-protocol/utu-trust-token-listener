@@ -15,44 +15,37 @@ const provider = new ethers.providers.WebSocketProvider(INFURA_WEBSOCKET);
 
 const UTT_MINED_AT_BLOCK = 0;
 
-export const getContract = async () => {
+async function getContract() {
   const CONTRACT_ABI = await getContractAbi();
   return new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
-};
+}
 
-export const getContractAbi = async () => {
+async function getContractAbi() {
   const input = ABI_FILE
     ? await fsp.readFile(ABI_FILE)
     : (await client.getPromise(etherscanUrl)).data.result;
 
   return JSON.parse(input);
-};
+}
 
-export const balance = async (address) => {
+export async function balance(address) {
   const contract = await getContract();
   const balance = await contract.balanceOf(address);
   return ethers.utils.formatEther(balance);
-};
+}
 
-export const blockNumber = async () => {
+async function blockNumber() {
   return await provider.getBlockNumber();
-};
+}
 
-export const eventQuery = async (
-  eventName = 'Endorse',
-  startBlock = UTT_MINED_AT_BLOCK
-) => {
-  return await contract.queryFilter(eventName, startBlock);
-};
-
-export const blockTimestamp = async (blockNumber) => {
+async function blockTimestamp(blockNumber) {
   const block = await provider.getBlock(blockNumber); // block is null; the regular provider apparently doesn't know about this block yet.
   return block.timestamp;
-};
+}
 
-export const getEndorsements = async (targetAddress, fromBlock = UTT_MINED_AT_BLOCK) => {
+export async function getEndorsements(targetAddress, fromBlock = UTT_MINED_AT_BLOCK) {
   const contract = await getContract();
   const endorsesFilter = await contract.filters.Endorse(null, targetAddress);
   return await contract.queryFilter(endorsesFilter, fromBlock);
-};
+}
 
