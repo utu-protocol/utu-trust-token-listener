@@ -13,7 +13,7 @@ const etherscanUrl = `http://${ETHERSCAN_HOST}/api?module=contract&action=getabi
 
 const provider = new ethers.providers.WebSocketProvider(INFURA_WEBSOCKET);
 
-const UTT_MINED_AT_BLOCK = 0;
+const UTT_MIN_BLOCK = 0;
 
 // exported functions
 
@@ -23,7 +23,7 @@ export async function balance(address) {
   return ethers.utils.formatEther(balance);
 }
 
-export async function getEndorsements(targetAddress, fromBlock = UTT_MINED_AT_BLOCK) {
+export async function getEndorsements(targetAddress, fromBlock = UTT_MIN_BLOCK) {
   const contract = await getContract();
   const endorsesFilter = await contract.filters.Endorse(null, targetAddress);
   return await contract.queryFilter(endorsesFilter, fromBlock);
