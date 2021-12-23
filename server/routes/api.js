@@ -16,7 +16,9 @@ router.get('/balance/:address', async (req, res) => {
 
 /* GET all endorsements for address. */
 router.get('/endorsements/:target_address?', async (req, res) => {
-  res.send(endorsementsResponse(await getEndorsements(req.params.target_address, parseInt(req.query.from_block))));
+  res.send(endorsementsResponse(await getEndorsements(
+    req.params.target_address,
+    req.query.from_block ? parseInt(req.query.from_block) : undefined)));
 });
 
 export default router;
