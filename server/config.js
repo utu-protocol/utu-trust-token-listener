@@ -11,7 +11,7 @@ module.exports = {
   ETHERSCAN_HOST: process.env.ETHERSCAN_HOST || 'api.etherscan.io',
 
   CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
-  UTT_MIN_BLOCK: process.env.UTT_MIN_BLOCK,
+  UTT_MIN_BLOCK: parseInt(process.env.UTT_MIN_BLOCK),
 
   PAYMENT_ADDRESS: process.env.PAYMENT_ADDRESS,
   RABBITMQ_URL: process.env.RABBITMQ_URL || 'amqp://localhost',
