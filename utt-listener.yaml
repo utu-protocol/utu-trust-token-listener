@@ -136,7 +136,9 @@ components:
           description: "Earliest block for which endorsements were returned."
           allOf: [{ $ref: "#/components/schemas/Block" }]
         toBlock:
-          description: "Latest block for which endorsements were returned."
+          description: "Latest block for which endorsements were returned. Note that this might be < fromBlock if the
+           number of the last existing block on the chain is < fromBlock (in which case the endorsements array will 
+           always be empty)."
           allOf: [{ $ref: "#/components/schemas/Block" }]
         endorsements:
           type: array
