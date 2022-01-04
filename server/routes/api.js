@@ -1,12 +1,7 @@
 import 'babel-polyfill';
 import express from 'express';
-import {
-  balance,
-  blockNumber,
-  eventQuery,
-  getEndorsements,
-  getEndorsementsActive
-} from '../utils/ethereum';
+import { balance, getEndorsements } from '../utils/ethereum';
+import { endorsementsResponse } from '../service/response';
 var router = express.Router();
 
 /* GET home. */
@@ -14,24 +9,16 @@ router.get('/', async (req, res) => {
   res.send('UTU Coin Endorses Listener');
 });
 
+/* GET UTT balance for address. */
+router.get('/balance/:address', async (req, res) => {
+  res.send(await balance(req.params.address));
+});
+
 /* GET all endorsements for address. */
-router.get('/endorsements/:address?', async (req, res) => {
-  res.send(await getEndorsements(req.params.address));
-});
-
-router.get('/endorsements/active/:address', async (req, res) => {
-  if (!req.params.address) return;
-  res.send(await getEndorsementsActive(req.params.address));
-})
-
-/* GET current block number. */
-router.get('/block', async (req, res) => {
-  res.send(await blockNumber());
-});
-
-/* GET get contract event query. */
-router.get('/contract', async (req, res) => {
-  res.send(await eventQuery());
+router.get('/endorsements/:target_address?', async (req, res) => {
+  res.send(endorsementsResponse(await getEndorsements(
+    req.params.target_address,
+    req.query.from_block ? parseInt(req.query.from_block) : undefined)));
 });
 
 export default router;
