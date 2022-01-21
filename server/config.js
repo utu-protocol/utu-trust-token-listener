@@ -1,11 +1,13 @@
 const dotenv = require('dotenv');
+const path = require('path');
+console.log(process.cwd());
 dotenv.config();
 module.exports = {
   NETWORK: process.env.NETWORK,
   INFURA_WEBSOCKET: process.env.INFURA_WEBSOCKET,
 
   // Either an ABI file or Etherscan api key + host must be provided:
-  ABI_FILE: process.env.ABI_FILE,
+  CONTRACT_ABI_URL: process.env.CONTRACT_ABI_URL,
 
   ETHERSCAN_API_KEY: process.env.ETHERSCAN_API_KEY,
   ETHERSCAN_HOST: process.env.ETHERSCAN_HOST || 'api.etherscan.io',

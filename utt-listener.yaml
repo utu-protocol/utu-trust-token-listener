@@ -40,8 +40,7 @@ paths:
       parameters:
         - in: query
           name: from_block
-          description: "Minimal block number for which to get endorsements. Defaults to the number of the block in 
-          which the UTT contract was deployed."
+          description: "Minimal block number for which to get endorsements. Defaults to the number of the block in which the UTT contract was deployed."
           schema:
             $ref: "#/components/schemas/BlockNumber"
       responses:
@@ -71,8 +70,7 @@ paths:
             $ref: "#/components/schemas/EthereumAddress"
         - in: query
           name: from_block
-          description: "Minimal block number for which to get endorsements. Defaults to the number of the block in 
-          which the UTT contract was deployed."
+          description: "Minimal block number for which to get endorsements. Defaults to the number of the block in which the UTT contract was deployed."
           schema:
             $ref: "#/components/schemas/BlockNumber"
       responses:
@@ -95,8 +93,7 @@ components:
       type: string
       pattern: ^0x[a-fA-F0-9]{40}$
     BlockNumber:
-      description: "A block number. Can be negative when used in queries, to indicate that data for the last 
-      recent number of blocks should be returned."
+      description: "A block number. Can be negative when used in queries, to indicate that data for the last recent number of blocks should be returned."
       type: integer
     Block:
       description: "Metadata about a block."
