@@ -1,5 +1,5 @@
-import { promises as fsp } from "fs";
-import { ethers } from "ethers";
+import { promises as fsp }  from "fs";
+import { ethers } from 'ethers';
 import {
   CONTRACT_ADDRESS,
   CONTRACT_ABI_URL,
@@ -7,8 +7,8 @@ import {
   ETHERSCAN_HOST,
   INFURA_WEBSOCKET,
   UTT_MIN_BLOCK,
-} from "../config";
-const client = require("node-rest-client-promise").Client();
+} from '../config';
+const client = require('node-rest-client-promise').Client();
 
 const etherscanUrl = `http://${ETHERSCAN_HOST}/api?module=contract&action=getabi&address=${CONTRACT_ADDRESS}&apikey=${ETHERSCAN_API_KEY}`;
 
