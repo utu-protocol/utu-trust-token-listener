@@ -1,5 +1,5 @@
-import "babel-polyfill";
-import express from "express";
+import 'babel-polyfill';
+import express from 'express';
 import { balance, getAddConnections, getEndorsements } from "../utils/ethereum";
 import {
   addConnectionsResponse,
