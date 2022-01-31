@@ -1,10 +1,6 @@
 import { ethers } from "ethers";
 
-export function endorsementsResponse({
-  endorsementEvents,
-  fromBlock,
-  toBlock,
-}) {
+export function endorsementsResponse({ endorsementEvents, fromBlock, toBlock }) {
   const endorsements = endorsementEvents.map((endorsementEvent) => ({
     source: endorsementEvent.args[0],
     target: endorsementEvent.args[1],
@@ -13,7 +9,7 @@ export function endorsementsResponse({
     ),
     block: {
       number: endorsementEvent.blockNumber,
-    },
+    }
   }));
 
   return {
@@ -27,11 +23,7 @@ export function endorsementsResponse({
   };
 }
 
-export function addConnectionsResponse({
-  addConnectionEvents,
-  fromBlock,
-  toBlock,
-}) {
+export function addConnectionsResponse({ addConnectionEvents, fromBlock, toBlock }) {
   const connections = addConnectionEvents.map((event) => ({
     address: event.args[0],
     socialId: event.args[1],

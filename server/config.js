@@ -1,6 +1,4 @@
 const dotenv = require('dotenv');
-const path = require('path');
-console.log(process.cwd());
 dotenv.config();
 module.exports = {
   NETWORK: process.env.NETWORK,
