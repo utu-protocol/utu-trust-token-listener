@@ -1,5 +1,5 @@
-import { promises as fsp }  from "fs";
-import { ethers } from 'ethers';
+import { promises as fsp } from "fs";
+import { ethers } from "ethers";
 import {
   CONTRACT_ADDRESS,
   CONTRACT_ABI_URL,
@@ -7,8 +7,9 @@ import {
   ETHERSCAN_HOST,
   INFURA_WEBSOCKET,
   UTT_MIN_BLOCK,
-} from '../config';
-const client = require('node-rest-client-promise').Client();
+  UTT_MAX_BLOCK_SIZE,
+} from "../config";
+const client = require("node-rest-client-promise").Client();
 
 const etherscanUrl = `http://${ETHERSCAN_HOST}/api?module=contract&action=getabi&address=${CONTRACT_ADDRESS}&apikey=${ETHERSCAN_API_KEY}`;
 
@@ -27,12 +28,13 @@ export async function getEndorsements(
   fromBlock = UTT_MIN_BLOCK
 ) {
   const toBlock = await provider.getBlockNumber();
+  const minBlock = fromBlock || toBlock - (UTT_MAX_BLOCK_SIZE - 1);
   return {
     fromBlock: fromBlock,
-    toBlock: toBlock,
+    toBlock: minBlock,
     endorsementEvents: await getFilteredEndorsements(
       targetAddress,
-      fromBlock,
+      minBlock,
       toBlock
     ),
   };
@@ -43,12 +45,13 @@ export async function getAddConnections(
   fromBlock = UTT_MIN_BLOCK
 ) {
   const toBlock = await provider.getBlockNumber();
+  const minBlock = fromBlock || toBlock - (UTT_MAX_BLOCK_SIZE - 1);
   return {
-    fromBlock: fromBlock,
+    fromBlock: minBlock,
     toBlock: toBlock,
     addConnectionEvents: await getFilteredAddConnections(
       targetAddress,
-      fromBlock,
+      minBlock,
       toBlock
     ),
   };

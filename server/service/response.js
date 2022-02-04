@@ -1,6 +1,14 @@
 import { ethers } from "ethers";
+import {
+  TELEGRAM_CONNECTION_TYPE_ID,
+  TWITTER_CONNECTION_TYPE_ID,
+} from "../config";
 
-export function endorsementsResponse({ endorsementEvents, fromBlock, toBlock }) {
+export function endorsementsResponse({
+  endorsementEvents,
+  fromBlock,
+  toBlock,
+}) {
   const endorsements = endorsementEvents.map((endorsementEvent) => ({
     source: endorsementEvent.args[0],
     target: endorsementEvent.args[1],
@@ -9,7 +17,7 @@ export function endorsementsResponse({ endorsementEvents, fromBlock, toBlock }) 
     ),
     block: {
       number: endorsementEvent.blockNumber,
-    }
+    },
   }));
 
   return {
@@ -23,10 +31,26 @@ export function endorsementsResponse({ endorsementEvents, fromBlock, toBlock }) 
   };
 }
 
-export function addConnectionsResponse({ addConnectionEvents, fromBlock, toBlock }) {
+function getSocialConnectionType(type) {
+  switch (type) {
+    case TELEGRAM_CONNECTION_TYPE_ID:
+      return "Telegram";
+    case TWITTER_CONNECTION_TYPE_ID:
+      return "Twitter";
+    default:
+      return type;
+  }
+}
+
+export function addConnectionsResponse({
+  addConnectionEvents,
+  fromBlock,
+  toBlock,
+}) {
   const connections = addConnectionEvents.map((event) => ({
     address: event.args[0],
-    socialId: event.args[1],
+    type: getSocialConnectionType(event.args[1].toNumber()),
+    hash: event.args[2],
   }));
 
   return {

@@ -1,4 +1,4 @@
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 module.exports = {
   NETWORK: process.env.NETWORK,
@@ -8,12 +8,15 @@ module.exports = {
   CONTRACT_ABI_URL: process.env.CONTRACT_ABI_URL,
 
   ETHERSCAN_API_KEY: process.env.ETHERSCAN_API_KEY,
-  ETHERSCAN_HOST: process.env.ETHERSCAN_HOST || 'api.etherscan.io',
+  ETHERSCAN_HOST: process.env.ETHERSCAN_HOST || "api.etherscan.io",
 
   CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
   UTT_MIN_BLOCK: parseInt(process.env.UTT_MIN_BLOCK),
+  UTT_MAX_BLOCK_SIZE: parseInt(process.env.UTT_MAX_BLOCK_SIZE || 3500),
 
   PAYMENT_ADDRESS: process.env.PAYMENT_ADDRESS,
-  RABBITMQ_URL: process.env.RABBITMQ_URL || 'amqp://localhost',
+  RABBITMQ_URL: process.env.RABBITMQ_URL || "amqp://localhost",
   RABBITMQ_QUEUE: process.env.RABBITMQ_QUEUE,
+  TWITTER_CONNECTION_TYPE_ID: 1,
+  TELEGRAM_CONNECTION_TYPE_ID: 2,
 };
