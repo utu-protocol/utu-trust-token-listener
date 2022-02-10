@@ -1,5 +1,5 @@
-import express from 'express';
-var router = express.Router();
+import ExpressRouter from "express-promise-router";
+const router = ExpressRouter();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

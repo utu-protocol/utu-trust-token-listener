@@ -1,4 +1,3 @@
-import { promises as fsp } from "fs";
 import { ethers } from "ethers";
 import {
   CONTRACT_ADDRESS,
@@ -9,6 +8,10 @@ import {
   UTT_MIN_BLOCK,
   UTT_MAX_BLOCK_SIZE,
 } from "../config";
+import NodeCache from "node-cache";
+
+const nodeCache = new NodeCache();
+
 const client = require("node-rest-client-promise").Client();
 
 const etherscanUrl = `http://${ETHERSCAN_HOST}/api?module=contract&action=getabi&address=${CONTRACT_ADDRESS}&apikey=${ETHERSCAN_API_KEY}`;
@@ -30,7 +33,7 @@ export async function getEndorsements(
   const toBlock = await provider.getBlockNumber();
   const minBlock = fromBlock || toBlock - (UTT_MAX_BLOCK_SIZE - 1);
   return {
-    fromBlock: fromBlock,
+    fromBlock: minBlock,
     toBlock: minBlock,
     endorsementEvents: await getFilteredEndorsements(
       targetAddress,
@@ -65,11 +68,16 @@ async function getContract() {
 }
 
 async function getContractAbi() {
-  const input = CONTRACT_ABI_URL
-    ? (await client.getPromise(CONTRACT_ABI_URL)).data.result
-    : (await client.getPromise(etherscanUrl)).data.result;
-
-  return JSON.parse(input);
+  let abi = nodeCache.get("contractAbi");
+  if (!abi) {
+    const input = CONTRACT_ABI_URL
+      ? (await client.getPromise(CONTRACT_ABI_URL)).data.result
+      : (await client.getPromise(etherscanUrl)).data.result;
+    const parsed = JSON.parse(input);
+    nodeCache.set("contractAbi", parsed, 86400);
+    abi = parsed;
+  }
+  return abi;
 }
 
 async function getFilteredEndorsements(targetAddress, fromBlock, toBlock) {
