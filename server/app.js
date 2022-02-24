@@ -4,14 +4,17 @@ import logger from "morgan";
 import path from "path";
 import apiRouter from "./routes/api";
 import indexRouter from "./routes/index";
+import timeout from "connect-timeout";
 
 var app = express();
 
+app.use(timeout("30s"));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../public")));
+app.use(haltOnTimedout);
 
 app.use("/", indexRouter);
 app.use("/api", apiRouter);
@@ -29,6 +32,10 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.send(err);
 });
+
+function haltOnTimedout(req, res, next) {
+  if (!req.timedout) next();
+}
 
 console.log("Service started ...");
 
