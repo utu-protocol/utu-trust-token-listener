@@ -27,6 +27,7 @@ export async function balance(address) {
 }
 
 export async function getEndorsements(
+  sourceAddress,
   targetAddress,
   fromBlock = UTT_MIN_BLOCK
 ) {
@@ -35,11 +36,12 @@ export async function getEndorsements(
   return {
     fromBlock: minBlock,
     toBlock: minBlock,
-    endorsementEvents: await getFilteredEndorsements(
+    endorsementEvents: await getFilteredEndorsements({
+      sourceAddress,
       targetAddress,
       minBlock,
-      toBlock
-    ),
+      toBlock,
+    }),
   };
 }
 
@@ -80,14 +82,22 @@ async function getContractAbi() {
   return abi;
 }
 
-async function getFilteredEndorsements(targetAddress, fromBlock, toBlock) {
+async function getFilteredEndorsements({
+  sourceAddress,
+  targetAddress,
+  fromBlock,
+  toBlock,
+}) {
   // When fromBlock > toBlock = last block, contract.queryFilter() unexpectedly still returns the events for the last
   // block. But we never want to return event outside the given range, therefore just return an empty error in this
   // case:
   if (fromBlock > toBlock) return [];
 
   const contract = await getContract();
-  const endorsesFilter = await contract.filters.Endorse(null, targetAddress);
+  const endorsesFilter = await contract.filters.Endorse(
+    sourceAddress || null,
+    targetAddress || null
+  );
   return contract.queryFilter(endorsesFilter, fromBlock, toBlock);
 }
 
