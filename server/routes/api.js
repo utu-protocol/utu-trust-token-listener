@@ -1,26 +1,26 @@
-import "babel-polyfill";
-import ExpressRouter from "express-promise-router";
-import {balance, getAddConnections, getEndorsements} from "../utils/ethereum";
+import 'babel-polyfill';
+import ExpressRouter from 'express-promise-router';
+import {balance, getAddConnections, getEndorsements} from '../utils/ethereum';
 import {
     addConnectionsResponse,
     endorsementsResponse,
-} from "../service/response";
-import {connectionsValidation, endorsementsValidation} from "../validations/api";
+} from '../service/response';
+import {connectionsValidation, endorsementsValidation} from '../validations/api';
 
 const router = ExpressRouter();
 
 /* GET home. */
-router.get("/", async (req, res) => {
-    res.send("UTU Coin Endorses Listener");
+router.get('/', async (req, res) => {
+    res.send('UTU Coin Endorses Listener');
 });
 
 /* GET UTT balance for address. */
-router.get("/balance/:address", async (req, res) => {
+router.get('/balance/:address', async (req, res) => {
     res.send(await balance(req.params.address));
 });
 
 /* GET all endorsements for address. */
-router.get("/endorsements", async (req, res) => {
+router.get('/endorsements', async (req, res) => {
     endorsementsValidation.validate(req.query);
 
     res.send(
@@ -35,7 +35,7 @@ router.get("/endorsements", async (req, res) => {
 });
 
 /* GET all endorsements for address. */
-router.get("/connections", async (req, res) => {
+router.get('/connections', async (req, res) => {
     connectionsValidation.validate(req.query);
 
     const results = await getAddConnections(

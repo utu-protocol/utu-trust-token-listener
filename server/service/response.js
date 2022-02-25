@@ -1,23 +1,17 @@
-import { ethers } from "ethers";
+import {ethers} from "ethers";
 import {
   TELEGRAM_CONNECTION_TYPE_ID,
   TWITTER_CONNECTION_TYPE_ID,
 } from "../config";
 
-export function endorsementsResponse({
-  endorsementEvents,
-  fromBlock,
-  toBlock,
-}) {
+export function endorsementsResponse({ endorsementEvents, fromBlock, toBlock }) {
   const endorsements = endorsementEvents.map((endorsementEvent) => ({
     source: endorsementEvent.args[0],
     target: endorsementEvent.args[1],
-    value: Number(
-      ethers.utils.formatEther(ethers.BigNumber.from(endorsementEvent.args[3]))
-    ),
+    value: Number(ethers.utils.formatEther(ethers.BigNumber.from(endorsementEvent.args[3]))),
     block: {
-      number: endorsementEvent.blockNumber,
-    },
+      number: endorsementEvent.blockNumber
+    }
   }));
 
   return {

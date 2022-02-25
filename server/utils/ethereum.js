@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import {
   CONTRACT_ADDRESS,
   CONTRACT_ABI_URL,
@@ -7,12 +7,12 @@ import {
   INFURA_WEBSOCKET,
   UTT_MIN_BLOCK,
   UTT_MAX_BLOCK_SIZE,
-} from "../config";
-import NodeCache from "node-cache";
+} from '../config';
+import NodeCache from 'node-cache';
 
 const nodeCache = new NodeCache();
 
-const client = require("node-rest-client-promise").Client();
+const client = require('node-rest-client-promise').Client();
 
 const etherscanUrl = `http://${ETHERSCAN_HOST}/api?module=contract&action=getabi&address=${CONTRACT_ADDRESS}&apikey=${ETHERSCAN_API_KEY}`;
 
@@ -70,13 +70,13 @@ async function getContract() {
 }
 
 async function getContractAbi() {
-  let abi = nodeCache.get("contractAbi");
+  let abi = nodeCache.get('contractAbi');
   if (!abi) {
     const input = CONTRACT_ABI_URL
       ? (await client.getPromise(CONTRACT_ABI_URL)).data.result
       : (await client.getPromise(etherscanUrl)).data.result;
     const parsed = JSON.parse(input);
-    nodeCache.set("contractAbi", parsed, 86400);
+    nodeCache.set('contractAbi', parsed, 86400);
     abi = parsed;
   }
   return abi;
