@@ -35,11 +35,11 @@ export async function getEndorsements(
   const minBlock = fromBlock || toBlock - (UTT_MAX_BLOCK_SIZE - 1);
   return {
     fromBlock: minBlock,
-    toBlock: minBlock,
+    toBlock: toBlock,
     endorsementEvents: await getFilteredEndorsements({
       sourceAddress,
       targetAddress,
-      minBlock,
+      fromBlock: minBlock,
       toBlock,
     }),
   };

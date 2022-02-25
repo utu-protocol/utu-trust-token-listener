@@ -8,13 +8,14 @@ const endorsementsValidation = new Validator(
     .keys({
       target_address: Joi.string().allow("").pattern(ADDRESS_REGEX).optional(),
       source_address: Joi.string().allow("").pattern(ADDRESS_REGEX).optional(),
+      from_block: Joi.number().optional()
     })
-    .or("target_address", "source_address")
 );
 
 const connectionsValidation = new Validator(
   Joi.object().keys({
     target_address: Joi.string().required(),
+    from_block: Joi.number().optional()
   })
 );
 
