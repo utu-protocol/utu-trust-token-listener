@@ -28,9 +28,9 @@ export function endorsementsResponse({ endorsementEvents, fromBlock, toBlock }) 
 function getSocialConnectionType(type) {
   switch (type) {
     case TELEGRAM_CONNECTION_TYPE_ID:
-      return "Telegram";
+      return "telegram";
     case TWITTER_CONNECTION_TYPE_ID:
-      return "Twitter";
+      return "twitter";
     default:
       return type;
   }
