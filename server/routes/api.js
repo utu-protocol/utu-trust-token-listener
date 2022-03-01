@@ -34,7 +34,7 @@ router.get('/endorsements', async (req, res) => {
     );
 });
 
-/* GET all endorsements for address. */
+/* GET all connections for address. */
 router.get('/connections', async (req, res) => {
     connectionsValidation.validate(req.query);
 
