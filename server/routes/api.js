@@ -45,4 +45,13 @@ router.get('/connections', async (req, res) => {
     res.send(addConnectionsResponse(results));
 });
 
+/* GET all endorsements for address. */
+router.get('/total-staked-amount', async (req, res) => {
+    endorsementsValidation.validate(req.query);
+
+    res.send(
+        "99.9"
+    );
+});
+
 export default router;
