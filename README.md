@@ -4,26 +4,41 @@
 
 Express HTTP endpoints
 
-- `GET /api/endorses/:address`
+- `GET /endorses/:address`
 
+## Installation
 
-## Build and run
-
-Create an `.env` file using the example [.env.example](.env.example) and fill in the needed credentials and details.
-
-Install dependencies
-```
-npm install
+```bash
+$ npm install
 ```
 
-Build the service
-```
+## Running the app
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+
+# Build the service
 npm run build
 ```
 
-Start
-```
-npm start
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
 ```
 
 ## Docker
