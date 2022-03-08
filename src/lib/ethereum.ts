@@ -48,7 +48,6 @@ export const startConnection = () => {
   });
 
   provider._websocket.on('pong', () => {
-    console.log('Received pong, so connection is alive, clearing the timeout');
     clearInterval(pingTimeout);
   });
 };
