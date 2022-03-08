@@ -12,8 +12,9 @@ import {
   EXPECTED_PONG_BACK,
   KEEP_ALIVE_CHECK_INTERVAL,
 } from 'src/config';
-
-// const nodeCache = new NodeCache();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const NodeCache = require('node-cache');
+const nodeCache = new NodeCache();
 
 const etherscanUrl = `http://${ETHERSCAN_HOST}/api?module=contract&action=getabi&address=${CONTRACT_ADDRESS}&apikey=${ETHERSCAN_API_KEY}`;
 let provider = null;
@@ -106,18 +107,17 @@ async function getContract() {
 }
 
 async function getContractAbi() {
-  //   let abi = nodeCache.get('contractAbi');
-  //   if (!abi) {
-  const input = CONTRACT_ABI_URL
-    ? (await axios.get(CONTRACT_ABI_URL)).data.result
-    : (await axios.get(etherscanUrl)).data.result;
+  let abi = nodeCache.get('contractAbi');
+  if (!abi) {
+    const input = CONTRACT_ABI_URL
+      ? (await axios.get(CONTRACT_ABI_URL)).data.result
+      : (await axios.get(etherscanUrl)).data.result;
 
-  const parsed = JSON.parse(input);
-  return parsed;
-  // nodeCache.set('contractAbi', parsed, 86400);
-  //     abi = parsed;
-  //   }
-  //   return abi;
+    const parsed = JSON.parse(input);
+    nodeCache.set('contractAbi', parsed, 86400);
+    abi = parsed;
+  }
+  return abi;
 }
 
 async function getFilteredEndorsements({
