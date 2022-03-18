@@ -34,39 +34,20 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
   /endorsements:
     get:
-      summary: "Fetches all endorsements."
-      operationId: getEndorsements
-      description: "Fetches endorsements for all target addresses. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
-      parameters:
-        - in: query
-          name: from_block
-          description: "Minimal block number for which to get endorsements. Defaults to the number of the block in 
-          which the UTT contract was deployed."
-          schema:
-            $ref: "#/components/schemas/BlockNumber"
-      responses:
-        "200":
-          description: "Endorsements for the given target address."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EndorsementsSuccessResponse"
-        default:
-          description: "Any error"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /endorsements/{target-address}:
-    get:
       summary: "Fetches endorsements for the given target address."
       operationId: getEndorsementsForAddress
       description: "Fetches endorsements for the given target address, a hex string. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
       parameters:
-        - in: path
+        - in: query
           name: target_address
-          required: true
+          required: false
           description: "Target address of returned endorsements, i.e. the endorsed address."
+          schema:
+            $ref: "#/components/schemas/EthereumAddress"
+        - in: query
+          name: source_address
+          required: false
+          description: "Source address of the endorser."
           schema:
             $ref: "#/components/schemas/EthereumAddress"
         - in: query
@@ -88,13 +69,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /connections/{target-address}:
+  /connections:
     get:
       summary: "Fetches endorsements for the given target address."
       operationId: getEndorsementsForAddress
       description: "Fetches endorsements for the given target address, a hex string. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
       parameters:
-        - in: path
+        - in: query 
           name: target_address
           required: true
           description: "Target address of returned endorsements, i.e. the endorsed address."
