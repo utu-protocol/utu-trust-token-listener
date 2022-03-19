@@ -1,22 +1,23 @@
 import { ethers } from 'ethers';
 // import * as NodeCache from 'node-cache';
-import axios from 'axios';
 import {
-  CONTRACT_ABI_URL,
   CONTRACT_ADDRESS,
-  ETHERSCAN_API_KEY,
-  ETHERSCAN_HOST,
+  // ETHERSCAN_API_KEY,
+  // ETHERSCAN_HOST,
   INFURA_WEBSOCKET,
   UTT_MAX_BLOCK_SIZE,
   UTT_MIN_BLOCK,
   EXPECTED_PONG_BACK,
   KEEP_ALIVE_CHECK_INTERVAL,
 } from 'src/config';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const NodeCache = require('node-cache');
-const nodeCache = new NodeCache();
 
-const etherscanUrl = `http://${ETHERSCAN_HOST}/api?module=contract&action=getabi&address=${CONTRACT_ADDRESS}&apikey=${ETHERSCAN_API_KEY}`;
+import CONTRACT_ABI from '../contracts/UTT.abi.json';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// const NodeCache = require('node-cache');
+// const nodeCache = new NodeCache();
+
+// const etherscanUrl = `http://${ETHERSCAN_HOST}/api?module=contract&action=getabi&address=${CONTRACT_ADDRESS}&apikey=${ETHERSCAN_API_KEY}`;
 let provider = null;
 
 export const startConnection = () => {
@@ -102,23 +103,22 @@ export async function getAddConnections(
 // private helper functions
 
 async function getContract() {
-  const CONTRACT_ABI = (await getContractAbi()) as any;
   return new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
 }
 
-async function getContractAbi() {
-  let abi = nodeCache.get('contractAbi');
-  if (!abi) {
-    const input = CONTRACT_ABI_URL
-      ? (await axios.get(CONTRACT_ABI_URL)).data.result
-      : (await axios.get(etherscanUrl)).data.result;
+// async function getContractAbi() {
+//   let abi = nodeCache.get('contractAbi');
+//   if (!abi) {
+//     const input = CONTRACT_ABI_URL
+//       ? (await axios.get(CONTRACT_ABI_URL)).data.result
+//       : (await axios.get(etherscanUrl)).data.result;
 
-    const parsed = JSON.parse(input);
-    nodeCache.set('contractAbi', parsed, 86400);
-    abi = parsed;
-  }
-  return abi;
-}
+//     const parsed = JSON.parse(input);
+//     nodeCache.set('contractAbi', parsed, 86400);
+//     abi = parsed;
+//   }
+//   return abi;
+// }
 
 async function getFilteredEndorsements({
   sourceAddress,
