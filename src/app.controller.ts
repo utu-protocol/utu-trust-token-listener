@@ -1,10 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import EndorsementDto from './endorsements/dto/endorsement.dto';
+import { EndorsementsService } from './endorsements/endorsements.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly endorsementsService: EndorsementsService,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -12,7 +16,11 @@ export class AppController {
   }
 
   @Get('/total-staked-amount')
-  getTotalStakedAmount(@Query() endorsementDto: EndorsementDto) {
-    return '99.9';
+  async getTotalStakedAmount(@Query() endorsementDto: EndorsementDto) {
+    const all = await this.endorsementsService.findAll(endorsementDto);
+    return all.endorsements.reduce(
+      (previousValue, currentValue) => previousValue.value + currentValue.value,
+      0,
+    );
   }
 }

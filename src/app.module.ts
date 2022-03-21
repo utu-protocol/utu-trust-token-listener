@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ConnectionsModule } from './connections/connections.module';
 import { EndorsementsModule } from './endorsements/endorsements.module';
 import { BalanceModule } from './balance/balance.module';
+import { EndorsementsService } from './endorsements/endorsements.service';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { BalanceModule } from './balance/balance.module';
     BalanceModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EndorsementsService],
 })
 export class AppModule {}
