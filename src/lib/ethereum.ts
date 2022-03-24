@@ -61,7 +61,7 @@ startConnection();
 export async function balance(address) {
   const contract = await getContract();
   const balance = await contract.balanceOf(address);
-  return ethers.utils.formatEther(balance);
+  return ethers.utils.formatUnits(balance, 0);
 }
 
 export async function getEndorsements(
@@ -146,7 +146,7 @@ async function getFilteredAddConnections(targetAddress, fromBlock, toBlock) {
   if (fromBlock > toBlock) return [];
 
   const contract = await getContract();
-  const connectionsFilter = await contract.filters.AddConnection(targetAddress);
+  const connectionsFilter = await contract.filters.AddConnection();
   return contract.queryFilter(connectionsFilter, fromBlock, toBlock);
 }
 
