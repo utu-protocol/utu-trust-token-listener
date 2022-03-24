@@ -146,7 +146,7 @@ async function getFilteredAddConnections(targetAddress, fromBlock, toBlock) {
   if (fromBlock > toBlock) return [];
 
   const contract = await getContract();
-  const connectionsFilter = await contract.filters.AddConnection();
+  const connectionsFilter = await contract.filters.AddConnection(targetAddress);
   return contract.queryFilter(connectionsFilter, fromBlock, toBlock);
 }
 
