@@ -20,7 +20,7 @@ export class EndorsementsService {
     const endorsements = endorsementEvents.map((endorsementEvent) => ({
       source: endorsementEvent.args[0],
       target: endorsementEvent.args[1],
-      value: Number(endorsementEvent.args[3]),
+      value: Number(endorsementEvent.args._value),
       block: {
         number: endorsementEvent.blockNumber,
       },
