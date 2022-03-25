@@ -30,7 +30,7 @@ export class ConnectionsService {
 
   private response({ addConnectionEvents, fromBlock, toBlock }) {
     const connections = addConnectionEvents.map((event) => ({
-      address: event.args[0],
+      address: String(event.args[0]).toLowerCase(),
       type: getSocialConnectionType(event.args[1].toNumber()),
       hash: event.args[2],
     }));

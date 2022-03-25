@@ -18,8 +18,8 @@ export class EndorsementsService {
 
   private response({ endorsementEvents, fromBlock, toBlock }) {
     const endorsements = endorsementEvents.map((endorsementEvent) => ({
-      source: endorsementEvent.args[0],
-      target: endorsementEvent.args[1],
+      source: String(endorsementEvent.args[0]).toLowerCase(),
+      target: String(endorsementEvent.args[1]).toLowerCase(),
       value: Number(endorsementEvent.args._value),
       block: {
         number: endorsementEvent.blockNumber,
