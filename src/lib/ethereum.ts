@@ -130,13 +130,23 @@ async function getFilteredEndorsements({
   // block. But we never want to return event outside the given range, therefore just return an empty error in this
   // case:
   if (fromBlock > toBlock) return [];
-
+  const allEvents = [];
   const contract = await getContract();
   const endorsesFilter = await contract.filters.Endorse(
     sourceAddress || null,
     targetAddress || null,
   );
-  return contract.queryFilter(endorsesFilter, fromBlock, toBlock);
+  for (let i = fromBlock; i < toBlock; i += UTT_MAX_BLOCK_SIZE) {
+    const _startBlock = i;
+    const _endBlock = Math.min(toBlock, i + (UTT_MAX_BLOCK_SIZE - 1));
+    const events = await contract.queryFilter(
+      endorsesFilter,
+      _startBlock,
+      _endBlock,
+    );
+    allEvents.push(...events);
+  }
+  return allEvents;
 }
 
 async function getFilteredAddConnections(targetAddress, fromBlock, toBlock) {
@@ -144,10 +154,21 @@ async function getFilteredAddConnections(targetAddress, fromBlock, toBlock) {
   // block. But we never want to return event outside the given range, therefore just return an empty error in this
   // case:
   if (fromBlock > toBlock) return [];
+  const allEvents = [];
 
   const contract = await getContract();
   const connectionsFilter = await contract.filters.AddConnection(targetAddress);
-  return contract.queryFilter(connectionsFilter, fromBlock, toBlock);
+  for (let i = fromBlock; i < toBlock; i += UTT_MAX_BLOCK_SIZE) {
+    const _startBlock = i;
+    const _endBlock = Math.min(toBlock, i + (UTT_MAX_BLOCK_SIZE - 1));
+    const events = await contract.queryFilter(
+      connectionsFilter,
+      _startBlock,
+      _endBlock,
+    );
+    allEvents.push(...events);
+  }
+  return allEvents;
 }
 
 async function blockTimestamp(blockNumber) {
