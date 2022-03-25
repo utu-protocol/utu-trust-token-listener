@@ -19,7 +19,7 @@ export class AppController {
   async getTotalStakedAmount(@Query() endorsementDto: EndorsementDto) {
     const all = await this.endorsementsService.findAll(endorsementDto);
     return all.endorsements.reduce(
-      (previousValue, currentValue) => previousValue.value + currentValue.value,
+      (sum, endorsement) => sum + endorsement.value,
       0,
     );
   }
