@@ -35,7 +35,7 @@ router.get('/endorsements', async (req, res) => {
 });
 
 /* GET all connections for address. */
-router.get('/connections', async (req, res) => {
+router.get("/connections", async (req, res) => {
     connectionsValidation.validate(req.query);
 
     const results = await getAddConnections(
