@@ -9,7 +9,11 @@ let instance;
 /**
  * Broker for async messaging
  */
-class MessageBroker {
+export default class MessageBroker {
+  queues: any;
+  connection: any;
+  channel: any;
+
   /**
    * Trigger init connection method
    */
@@ -70,17 +74,12 @@ class MessageBroker {
   async unsubscribe(queue, handler) {
     _.pull(this.queues[queue], handler);
   }
-}
 
-/**
- * @return {Promise<MessageBroker>}
- */
-MessageBroker.getInstance = async function () {
-  if (!instance) {
-    const broker = new MessageBroker();
-    instance = broker.init();
+  static async getInstance() {
+    if (!instance) {
+      const broker = new MessageBroker();
+      instance = broker.init();
+    }
+    return instance;
   }
-  return instance;
-};
-
-module.exports = MessageBroker;
+}

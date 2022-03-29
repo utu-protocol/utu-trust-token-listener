@@ -1,5 +1,6 @@
-FROM node:12
+FROM node:16
 
+ENV PORT 8080
 # Create app directory
 WORKDIR /usr/src/app
 
@@ -9,13 +10,11 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
 
 # Bundle app source
-COPY . .
+COPY ./dist ./dist
 
-ENV PORT=3000
-
-EXPOSE 3000
-
-# Stage 2 - Run the application
-CMD [ "npm", "start" ]
+EXPOSE 8080
+CMD [ "npm", "run", "start:prod" ]

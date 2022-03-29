@@ -34,39 +34,20 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
   /endorsements:
     get:
-      summary: "Fetches all endorsements."
-      operationId: getEndorsements
-      description: "Fetches endorsements for all target addresses. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
-      parameters:
-        - in: query
-          name: from_block
-          description: "Minimal block number for which to get endorsements. Defaults to the number of the block in 
-          which the UTT contract was deployed."
-          schema:
-            $ref: "#/components/schemas/BlockNumber"
-      responses:
-        "200":
-          description: "Endorsements for the given target address."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EndorsementsSuccessResponse"
-        default:
-          description: "Any error"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /endorsements/{target-address}:
-    get:
       summary: "Fetches endorsements for the given target address."
       operationId: getEndorsementsForAddress
       description: "Fetches endorsements for the given target address, a hex string. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
       parameters:
-        - in: path
+        - in: query
           name: target_address
-          required: true
+          required: false
           description: "Target address of returned endorsements, i.e. the endorsed address."
+          schema:
+            $ref: "#/components/schemas/EthereumAddress"
+        - in: query
+          name: source_address
+          required: false
+          description: "Source address of the endorser."
           schema:
             $ref: "#/components/schemas/EthereumAddress"
         - in: query
@@ -88,14 +69,53 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /connections:
+    get:
+      summary: "Fetches endorsements for the given target address."
+      operationId: getEndorsementsForAddress
+      description: "Fetches endorsements for the given target address, a hex string. Returned endorsements can be filtered from a given start block, which defaults to the block in which the UTT contract was deployed."
+      parameters:
+        - in: query 
+          name: target_address
+          required: true
+          description: "Target address of returned endorsements, i.e. the endorsed address."
+          schema:
+            $ref: "#/components/schemas/EthereumAddress"
+        - in: query
+          name: from_block
+          description: "Minimal block number for which to get endorsements. Defaults to the number of the block in 
+          which the UTT contract was deployed."
+          schema:
+            $ref: "#/components/schemas/BlockNumber"
+      responses:
+        "200":
+          description: "Endorsements for the given target address."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConnectionsSuccessResponse"
+        default:
+          description: "Any error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     EthereumAddress:
       description: "An Ethereum address hex string."
       type: string
       pattern: ^0x[a-fA-F0-9]{40}$
+    SocialMediaType:
+      description: "Social media type"
+      type: string
+      enum: [Twitter, Telegram]
+      example: Twitter
+    Hash:
+      type: string
+      example: "0x00bb21437e36f5b9c5e1a263ddfc5ba78cde430e22a90566268f3f9d0dac9f6b"
     BlockNumber:
-      description: "A block number. Can be negative when used in queries, to indicate that data for the last 
+      description: "A block number. Can be negative when used in queries, to indicate that data for the last 7
       recent number of blocks should be returned."
       type: integer
     Block:
@@ -163,5 +183,40 @@ components:
         block:
           description: "Block in which this endorsements was mined."
           allOf: [{ $ref: "#/components/schemas/Block" }]
+    ConnectionsSuccessResponse:
+      description: "Connections service response."
+      type: object
+      required:
+        - fromBlock
+        - toBlock
+        - connections
+      properties:
+        fromBlock:
+          description: "Earliest block for which endorsements were returned."
+          allOf: [{ $ref: "#/components/schemas/Block" }]
+        toBlock:
+          description: "Latest block for which endorsements were returned. Note that this might be < fromBlock if the
+           number of the last existing block on the chain is < fromBlock (in which case the endorsements array will 
+           always be empty)."
+          allOf: [{ $ref: "#/components/schemas/Block" }]
+        connections:
+          type: array
+          items:
+            $ref: "#/components/schemas/Connection"
 
-
+    Connection:
+      description: "A single connection."
+      type: object
+      required:
+        - source
+        - target
+      properties:
+        address:
+          description: "The address of the user."
+          allOf: [{ $ref: "#/components/schemas/EthereumAddress" }]
+        type:
+          description: "The type of social media connection."
+          allOf: [{ $ref: "#/components/schemas/SocialMediaType" }]
+        hash:
+          description: "Social id hash"
+          allOf: [{ $ref: "#/components/schemas/Hash" }]
