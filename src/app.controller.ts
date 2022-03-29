@@ -1,9 +1,16 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  CacheInterceptor,
+  Controller,
+  Get,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import EndorsementDto from './endorsements/dto/endorsement.dto';
 import { EndorsementsService } from './endorsements/endorsements.service';
 
 @Controller()
+@UseInterceptors(CacheInterceptor)
 export class AppController {
   constructor(
     private readonly appService: AppService,
