@@ -14,7 +14,7 @@ export default class Validator {
     const errors = {};
     details.forEach((detail) => {
       errors[detail.context.label] = detail.message
-        .replace('"', "")
+        .replace("\"", "")
         .replace('"', "")
         .replaceAll('"', "'");
     });
