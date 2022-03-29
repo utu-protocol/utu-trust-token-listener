@@ -4,7 +4,7 @@ import {balance, getAddConnections, getEndorsements} from '../utils/ethereum';
 import {
     addConnectionsResponse,
     endorsementsResponse,
-} from '../service/response';
+} from "../service/response";
 import {connectionsValidation, endorsementsValidation} from '../validations/api';
 
 const router = ExpressRouter();
