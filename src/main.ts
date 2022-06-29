@@ -11,10 +11,9 @@ async function bootstrap() {
     }),
   );
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('UTT Token Listener')
+    .setDescription('Api documentation for the UTT Token contract')
     .setVersion('1.0')
-    .addTag('cats')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
