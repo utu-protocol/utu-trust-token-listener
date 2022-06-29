@@ -1,14 +1,8 @@
-import {
-  CacheInterceptor,
-  Controller,
-  Get,
-  Param,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { BalanceService } from './balance.service';
 
 @Controller('balance')
-@UseInterceptors(CacheInterceptor)
+// @UseInterceptors(CacheInterceptor)
 export class BalanceController {
   constructor(private readonly balanceService: BalanceService) {}
 

@@ -2,13 +2,10 @@ import { ethers } from 'ethers';
 // import * as NodeCache from 'node-cache';
 import {
   CONTRACT_ADDRESS,
-  // ETHERSCAN_API_KEY,
-  // ETHERSCAN_HOST,
-  INFURA_WEBSOCKET,
-  UTT_MAX_BLOCK_SIZE,
-  UTT_MIN_BLOCK,
   EXPECTED_PONG_BACK,
+  INFURA_WEBSOCKET,
   KEEP_ALIVE_CHECK_INTERVAL,
+  UTT_MAX_BLOCK_SIZE,
 } from 'src/config';
 
 import CONTRACT_ABI from '../contracts/UTT.abi.json';
@@ -64,13 +61,9 @@ export async function balance(address) {
   return ethers.utils.formatUnits(balance, 0);
 }
 
-export async function getEndorsements(
-  sourceAddress,
-  targetAddress,
-  fromBlock = UTT_MIN_BLOCK,
-) {
+export async function getEndorsements(sourceAddress, targetAddress) {
   const toBlock = await provider.getBlockNumber();
-  const minBlock = fromBlock || toBlock - (UTT_MAX_BLOCK_SIZE - 1);
+  const minBlock = toBlock - (UTT_MAX_BLOCK_SIZE - 1);
   return {
     fromBlock: minBlock,
     toBlock: toBlock,
@@ -83,12 +76,9 @@ export async function getEndorsements(
   };
 }
 
-export async function getAddConnections(
-  targetAddress,
-  fromBlock = UTT_MIN_BLOCK,
-) {
+export async function getAddConnections(targetAddress) {
   const toBlock = await provider.getBlockNumber();
-  const minBlock = fromBlock || toBlock - (UTT_MAX_BLOCK_SIZE - 1);
+  const minBlock = toBlock - (UTT_MAX_BLOCK_SIZE - 1);
   return {
     fromBlock: minBlock,
     toBlock: toBlock,
@@ -130,23 +120,14 @@ async function getFilteredEndorsements({
   // block. But we never want to return event outside the given range, therefore just return an empty error in this
   // case:
   if (fromBlock > toBlock) return [];
-  const allEvents = [];
+
   const contract = await getContract();
   const endorsesFilter = await contract.filters.Endorse(
     sourceAddress || null,
     targetAddress || null,
   );
-  for (let i = fromBlock; i < toBlock; i += UTT_MAX_BLOCK_SIZE) {
-    const _startBlock = i;
-    const _endBlock = Math.min(toBlock, i + (UTT_MAX_BLOCK_SIZE - 1));
-    const events = await contract.queryFilter(
-      endorsesFilter,
-      _startBlock,
-      _endBlock,
-    );
-    allEvents.push(...events);
-  }
-  return allEvents;
+
+  return await contract.queryFilter(endorsesFilter, fromBlock, toBlock);
 }
 
 async function getFilteredAddConnections(targetAddress, fromBlock, toBlock) {
@@ -154,21 +135,10 @@ async function getFilteredAddConnections(targetAddress, fromBlock, toBlock) {
   // block. But we never want to return event outside the given range, therefore just return an empty error in this
   // case:
   if (fromBlock > toBlock) return [];
-  const allEvents = [];
 
   const contract = await getContract();
   const connectionsFilter = await contract.filters.AddConnection(targetAddress);
-  for (let i = fromBlock; i < toBlock; i += UTT_MAX_BLOCK_SIZE) {
-    const _startBlock = i;
-    const _endBlock = Math.min(toBlock, i + (UTT_MAX_BLOCK_SIZE - 1));
-    const events = await contract.queryFilter(
-      connectionsFilter,
-      _startBlock,
-      _endBlock,
-    );
-    allEvents.push(...events);
-  }
-  return allEvents;
+  return await contract.queryFilter(connectionsFilter, fromBlock, toBlock);
 }
 
 async function blockTimestamp(blockNumber) {
