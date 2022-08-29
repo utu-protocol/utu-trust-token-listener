@@ -19,11 +19,8 @@ const getSocialConnectionType = (type) => {
 
 @Injectable()
 export class ConnectionsService {
-  async findAll({ target_address, from_block }: ConnectionDto) {
-    const results = await getAddConnections(
-      target_address,
-      from_block ? parseInt(from_block) : undefined,
-    );
+  async findAll({ target_address }: ConnectionDto) {
+    const results = await getAddConnections(target_address);
 
     return this.response(results);
   }
